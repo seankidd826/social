@@ -14,5 +14,15 @@
     <%= photo.content %>
   </p><br>
 
-  <hr>
+
+  <% photo.comments.each do |comment| %>
+    <%= comment.content %>
+  <% end %>
+
+  <%= form_for Comment.new, :url => photo_comments_path(photo) do |f| %>
+    <%= f.text_field :content %>
+    <%= f.submit %>
+  <% end %>
+
+<hr>
 <% end %>
