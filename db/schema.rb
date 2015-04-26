@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150424035405) do
+ActiveRecord::Schema.define(version: 20150426071953) do
+
+  create_table "photos", force: :cascade do |t|
+    t.text     "content"
+    t.integer  "user_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "photos", ["user_id"], name: "index_photos_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -28,6 +41,9 @@ ActiveRecord::Schema.define(version: 20150424035405) do
     t.datetime "updated_at"
     t.string   "provider"
     t.string   "uid"
+    t.string   "fb_uid"
+    t.string   "fb_image"
+    t.string   "fb_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
