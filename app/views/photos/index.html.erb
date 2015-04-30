@@ -7,22 +7,53 @@
   <%= link_to image_tag(photo.image.url(:medium)), photo.image.url, :target => '_blank' %>
   <p>
 
-    <%= link_to 'Edit', edit_photo_path(photo) %>
-    <%= link_to 'Delete', photo_path(photo), :method => :delete %>
+    <% if photo.user == current_user %>
+      <%= link_to 'Edit', edit_photo_path(photo) %>
+      <%= link_to 'Delete', photo_path(photo), :method => :delete %>
+    <% end %>
+
   </p><br>
   <p>
     <%= photo.content %>
   </p><br>
 
+  <p>
+    Likes: <%= photo.likes_count %>
 
+    <% photo.like_users.each do |u| %>
+      <%= link_to u.name, user_path(u) %>
+    <% end %>
+
+    <% like = photo.find_like_by_user(current_user) %>
+
+    <% if like %>
+      <%= link_to "-1", photo_like_path(photo, like), :method => :delete %>
+    <% else %>
+     <%= link_to "+1", photo_likes_path(photo), :method => :post %>
+    <% end %>
+  </p>
+  <br>
+
+  <p>
+
+  <ul>
   <% photo.comments.each do |comment| %>
-    <%= comment.content %>
+
+    <li id="comment-<%= comment.id %>">
+      <%= comment.content %>
+      <% if comment.user == current_user %>
+        <%= link_to "Delete", photo_comment_path(photo, comment), :method => :delete, :remote => true %>
+      <% end %>
+    </li>
+
   <% end %>
+  </ul>
 
   <%= form_for Comment.new, :url => photo_comments_path(photo) do |f| %>
     <%= f.text_field :content %>
     <%= f.submit %>
   <% end %>
+  </p>
 
 <hr>
 <% end %>
